@@ -1,0 +1,72 @@
+import { Model, DataTypes, Optional } from 'sequelize';
+import bcrypt from 'bcrypt';
+import sequelize from './index';
+
+interface UserAttributes {
+    id: number;
+    first_name: string,
+    last_name: string,
+    email: string,
+    password: string;
+    mobile_no: string;
+}
+
+interface UserCreationAttributes extends Optional<UserAttributes, 'id'> { }
+
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+    public id!: number;
+    public first_name!: string;
+    public last_name!: string;
+    public email!: string;
+    public mobile_no!: string;
+    public password!: string;
+}
+
+User.init({
+    id: {
+        type: DataTypes.BIGINT,
+        autoIncrement: true,
+        primaryKey: true,
+    },
+    first_name: {
+        type: DataTypes.STRING(255),
+    },
+    last_name: {
+        type: DataTypes.STRING(255),
+    },
+    email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: {
+            isEmail: {
+                msg: "Enter a valid email address!"
+            },
+            notNull: {
+                msg: 'Email is required.'
+            },
+        }
+    },
+    mobile_no: {
+        type: DataTypes.NUMBER,
+        unique: true,
+        allowNull: false,
+        validate: {
+            isEmail: {
+                msg: "Enter a valid mobile number!"
+            },
+            notNull: {
+                msg: 'Mobile Number is required.'
+            },
+        }
+    },
+    password: {
+        type: DataTypes.STRING
+    }
+}, {
+    sequelize,
+    modelName: 'User',
+    underscored: true
+});
+
+export default User;
